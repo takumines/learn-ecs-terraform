@@ -2,7 +2,7 @@ resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
 
   tags = {
-    Name = "${aws_vpc.this.tags.Name}public"
+    Name = "${aws_vpc.this.tags.Name}-public"
   }
 }
 
@@ -32,4 +32,11 @@ resource "aws_route" "nat_gateway_private" {
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = aws_nat_gateway.this[var.single_nat_gateway ? keys(var.azs)[0] : each.key].id
   route_table_id         = aws_route_table.private[each.key].id
+}
+
+resource "aws_route_table_association" "private" {
+  for_each = var.azs
+
+  route_table_id = aws_route_table.private[each.key].id
+  subnet_id      = aws_subnet.private[each.key].id
 }

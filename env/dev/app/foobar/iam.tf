@@ -72,7 +72,8 @@ resource "aws_iam_role" "ecs_task" {
           },
           "Action" : "sts:AssumeRole"
         }
-    ] }
+      ]
+    }
   )
   tags = {
     Name = "${local.name_prefix}-${local.service_name}-ecs-task"
